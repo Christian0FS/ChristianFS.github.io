@@ -1,0 +1,8 @@
+body {
+    font: bold 11pt Arial;
+    background-color: rgba(108, 117, 241, 0.884);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }

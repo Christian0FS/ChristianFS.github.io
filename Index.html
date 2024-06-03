@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./Style.css" />
+    <link rel="shortcut icon" href="./download.jpeg" type="image/x-icon" />
+  </head>
+  <body>
+    <form action="" method="post" name="primeiro_formulario" id="form_part2">
+      <fieldset>
+        <legend>Cadastro de aluno</legend>
+
+        <div>
+          <label for="id_nome"
+            >Nome:
+            <input
+              type="text"
+              name="nome"
+              id="id_nome"
+              required
+              placeholder="Informe seu nome"
+              minlength="6"
+              maxlength="50"
+            />
+          </label>
+          <br />
+        </div>
+        <div>
+          <label for="id_data"
+            >Data de nascimento:
+            <!-- <input type="date" name="data" id="id_data" /> -->
+
+            <input type="datetime-local" value="2007-05-03" />
+            <input type="time" />
+            <input type="week" />
+            <input type="month" />
+          </label>
+        </div>
+        <div>
+          <p>Vagas disponíveis:</p>
+          <label for="id_front"
+            >Dev Front-end JR
+            <input
+              type="radio"
+              name="vaga"
+              value="Dev Front-end JR"
+              id="id_front"
+            />
+          </label>
+          <label for="id_designer"
+            >Designer UI/UX
+            <input
+              type="radio"
+              name="vaga"
+              value="Designer UI/UX"
+              id="id_designer"
+            />
+          </label>
+        </div>
+        <div>
+          <p>Habilidades:</p>
+          <label for="id_html"
+            >HTML 5
+            <input
+              type="checkbox"
+              name="habilidades"
+              value="HTML 5"
+              id="id_html"
+            />
+          </label>
+          <label for="id_js"
+            >Javascript
+            <input
+              type="checkbox"
+              name="habilidades"
+              value="Javascript"
+              id="id_js"
+            />
+          </label>
+          <label for="id_figma"
+            >Figma
+            <input
+              type="checkbox"
+              name="habilidades"
+              value="Figma"
+              id="id_figma"
+            />
+          </label>
+        </div>
+        <div>
+          <label for="id_textarea"
+            >Cursos:
+            <textarea
+              name="cursos_textarea"
+              id="id_textarea"
+              cols="30"
+              rows="4"
+            ></textarea>
+          </label>
+        </div>
+        <button type="submit">Enviar</button>
+      </fieldset>
+    </form>
+
+    <script type="module">
+      // Importação
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+      import {
+        getDatabase,
+        ref,
+        push,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA0KK60GN-g2N2snEcVgSV2nG8dLHnrurE",
+        authDomain: "christian-fs.firebaseapp.com",
+        databaseURL: "https://christian-fs-default-rtdb.firebaseio.com",
+        projectId: "christian-fs",
+        storageBucket: "christian-fs.appspot.com",
+        messagingSenderId: "139767362058",
+        appId: "1:139767362058:web:5e29107ab893b2c70aa5f3",
+        measurementId: "G-7NKS3HY73X",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const database = getDatabase();
+
+      let form = document.getElementById("form_part2");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let vetor = [];
+
+        //1ª RESOLUÇÃO - Percorrer com o FOR
+        for (let i = 0; i < form.habilidades.length; i++) {
+          if (form.habilidades[i].checked) {
+            vetor[i] = form.habilidades[i].value;
+            console.log(form.habilidades[i].value);
+          }
+        }
+
+        alert(`
+      Nome: ${form.nome.value}
+      Vaga: ${form.vaga.value}
+      Habilidades: ${vetor}
+      Cursos: ${form.cursos_textarea.value}
+      `);
+
+        // Enviar os dados para o Firebase
+        const usersRef = ref(database, "users");
+        push(usersRef, {
+          nome: form.nome.value,
+          data: form.data.value,
+          radio: form.vaga.value,
+          cursos: form.cursos_textarea.value,
+          checks: vetor,
+        })
+          .then(() => {
+            alert("Dados enviados com sucesso!");
+            console.log("Dados enviados com sucesso!");
+            // Faça qualquer ação adicional aqui, como redirecionar o usuário ou exibir uma mensagem de sucesso.
+          })
+          .catch((error) => {
+            console.error("Erro ao enviar dados:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
